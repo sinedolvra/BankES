@@ -1,0 +1,2 @@
+# BankES
+ EventStore example
