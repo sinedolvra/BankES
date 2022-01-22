@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Bank.Domain.Events
 {
@@ -8,13 +10,20 @@ namespace Bank.Domain.Events
         public Guid EventId { get; set; }
         public DateTime EventCommittedTimestamp { get; set; }
         public int AggregateVersion { get; set; }
+        public string EventType { get; set; }
+        public Guid CorrelationId { get; set; }
+        public Guid SagaProcessKey { get; set; }
 
         public Event(Guid aggregateId)
         {
             AggregateId = aggregateId;
-            EventId = Guid.NewGuid();
             EventCommittedTimestamp = DateTime.UtcNow;
             //AggregateVersion = aggregateVersion;
         }
+
+        public string Payload() => JsonConvert.SerializeObject(this, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        });
     }
 }

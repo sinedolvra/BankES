@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Domain", "Bank.Domain\Bank.Domain.csproj", "{819A5253-6B70-4F43-AE55-2E4C3BEFED17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Repository", "..\Bank.Repository\Bank.Repository.csproj", "{A2919A86-19E1-4280-8B4C-41FC0B89D9A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{819A5253-6B70-4F43-AE55-2E4C3BEFED17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{819A5253-6B70-4F43-AE55-2E4C3BEFED17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{819A5253-6B70-4F43-AE55-2E4C3BEFED17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2919A86-19E1-4280-8B4C-41FC0B89D9A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2919A86-19E1-4280-8B4C-41FC0B89D9A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2919A86-19E1-4280-8B4C-41FC0B89D9A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2919A86-19E1-4280-8B4C-41FC0B89D9A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
