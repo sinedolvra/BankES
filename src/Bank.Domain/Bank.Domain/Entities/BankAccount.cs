@@ -11,7 +11,5 @@ namespace Bank.Domain.Entities
         public AccountHolder AccountHolder { get; set; }
         public decimal CurrentBalance { get; set; }
         public BankAccountState State { get; set; }
-
-        
     }
 }

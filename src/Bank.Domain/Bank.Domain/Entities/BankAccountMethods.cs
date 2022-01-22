@@ -16,25 +16,21 @@ namespace Bank.Domain.Entities
 
         public void TransferMoney(decimal amount, string bankAccountDstId)
         {
-            if (CurrentBalance < amount)
-                throw new InvalidOperationException("Not enough money available");
+            ValidateAmount(amount);
             var @event = new MoneyTransferred(Id, amount, bankAccountDstId);
             Add(@event);
         }
 
         public void Withdraw(decimal amount)
         {
-            if(CurrentBalance < amount)
-                throw new InvalidOperationException("Not enough money available");
+            ValidateAmount(amount);
             var @event = new Withdrawal(Id, amount);
             Add(@event);
         }
 
         public void Close()
         {
-            if (State != BankAccountState.Opened)
-                throw new InvalidOperationException("Invalid state to close account");
-            
+            ValidateState("Invalid state to close account");
             var balance = CurrentBalance > 0 ? 0M : CurrentBalance;
             var @event = new AccountClosed(Id, balance);
             Add(@event);
@@ -42,9 +38,20 @@ namespace Bank.Domain.Entities
 
         public void Deposit(decimal amount)
         {
-            if (State != BankAccountState.Opened)
-                throw new InvalidOperationException("Invalid state to deposit");
+            ValidateState("Invalid state to deposit");
             var @event = new DepositedAmount(Id, amount);
+        }
+
+        private void ValidateState(string msg)
+        {
+            if (State != BankAccountState.Opened)
+                throw new InvalidOperationException(msg);
+        }
+        
+        private void ValidateAmount(decimal amount)
+        {
+            if(CurrentBalance < amount)
+                throw new InvalidOperationException("Not enough money available");
         }
 
         public void Apply(AccountOpened @event)
