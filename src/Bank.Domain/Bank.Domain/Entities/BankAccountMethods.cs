@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Bank.Domain.Enumerations;
 using Bank.Domain.Events;
 using Bank.Domain.ValueObjects;
@@ -7,39 +8,45 @@ namespace Bank.Domain.Entities
 {
     public partial class BankAccount
     {
-        public void Open(string numberCode, string ispb, string branchNumber, string branchDigit, string accountNumber, string accountDigit, AccountType accountType, AccountHolder accountHolder)
+        public async Task Open(string numberCode, string ispb, string branchNumber, string branchDigit, string accountNumber, string accountDigit, AccountType accountType, AccountHolder accountHolder)
         {
             InitializeId();
             var @event = new AccountOpened(Id, accountNumber, accountDigit, accountType, accountHolder);
-            Add(@event);
+            AddEvent(@event);
+            await Save();
         }
 
-        public void TransferMoney(decimal amount, string bankAccountDstId)
+        public async Task TransferMoney(decimal amount, string bankAccountDstId)
         {
             ValidateAmount(amount);
             var @event = new MoneyTransferred(Id, amount, bankAccountDstId);
-            Add(@event);
+            AddEvent(@event);
+            await Save();
         }
 
-        public void Withdraw(decimal amount)
+        public async Task Withdraw(decimal amount)
         {
             ValidateAmount(amount);
             var @event = new Withdrawal(Id, amount);
-            Add(@event);
+            AddEvent(@event);
+            await Save();
         }
 
-        public void Close()
+        public async Task Close()
         {
             ValidateState("Invalid state to close account");
             var balance = CurrentBalance > 0 ? 0M : CurrentBalance;
             var @event = new AccountClosed(Id, balance);
-            Add(@event);
+            AddEvent(@event);
+            await Save();
         }
 
-        public void Deposit(decimal amount)
+        public async Task Deposit(decimal amount)
         {
             ValidateState("Invalid state to deposit");
             var @event = new DepositedAmount(Id, amount);
+            AddEvent(@event);
+            await Save();
         }
 
         private void ValidateState(string msg)
@@ -61,16 +68,28 @@ namespace Bank.Domain.Entities
             AccountType = @event.AccountType;
             AccountHolder = @event.AccountHolder;
             State = BankAccountState.Opened;
+            Version = @event.AggregateVersion;
         }
         
         public void Apply(AccountClosed @event)
         {
             CurrentBalance = @event.Balance;
             State = BankAccountState.Closed;
+            Version = @event.AggregateVersion;
         }
 
-        public void Apply(MoneyTransferred @event) => CurrentBalance -= @event.TransferredAmount;
+        public void Apply(MoneyTransferred @event)
+        {
+            CurrentBalance -= @event.TransferredAmount;
+            Version = @event.AggregateVersion;
+        }
+
+        public void Apply(Withdrawal @event)
+        {
+            CurrentBalance -= @event.Amount;
+            Version = @event.AggregateVersion;
+        }
         
-        public void Apply(Withdrawal @event) => CurrentBalance -= @event.Amount;
+        private async Task Save() => await Repository.Save(this);
     }
 }
