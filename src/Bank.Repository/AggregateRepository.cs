@@ -21,8 +21,8 @@ namespace Bank.Repository
         public async Task Save(T aggregateRoot)
         {
             var @events = aggregateRoot.UncommittedEvents();
-            var eventDescriptors = @events.Select(x => new EventDescriptor(aggregateRoot.Id, x.EventId, x.EventCommittedTimestamp, x.Payload(),
-                x.EventType, x.CorrelationId, x.SagaProcessKey));
+            var eventDescriptors = @events.Select(x => new EventDescriptor(aggregateRoot.Id, x.EventInfo.EventId, x.EventInfo.EventCommittedTimestamp, x.Payload(),
+                x.EventType, x.EventInfo.CorrelationId, x.EventInfo.SagaProcessKey));
             await Context.AddRangeAsync(eventDescriptors);
             aggregateRoot.Commit();
         }

@@ -11,8 +11,8 @@ namespace Bank.Domain.Events
         public AccountType AccountType { get; set; }
         public AccountHolder AccountHolder { get; set; }
 
-        public AccountOpened(Guid aggregateId, string accountNumber, string accountDigit, AccountType accountType, 
-            AccountHolder accountHolder) : base(aggregateId)
+        public AccountOpened(Guid aggregateId, Guid sagaProcessKey, int aggregateVersion, string accountNumber, string accountDigit, AccountType accountType, 
+            AccountHolder accountHolder) : base(new EventInfo(aggregateId, sagaProcessKey), aggregateVersion)
         {
             AccountNumber = accountNumber;
             AccountDigit = accountDigit;

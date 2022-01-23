@@ -8,7 +8,8 @@ namespace Bank.Domain.Events
         public string BankAccountDstId { get; set; }
         public decimal TransferredAmount { get; set; }
 
-        public MoneyTransferred(Guid aggregateId, decimal transferredAmount, string bankAccountDstId) : base(aggregateId)
+        public MoneyTransferred(Guid aggregateId, Guid sagaProcessKey, int aggregateVersion, decimal transferredAmount, string bankAccountDstId)
+            : base(new EventInfo(aggregateId, sagaProcessKey), aggregateVersion)
         {
             BankAccountDstId = bankAccountDstId;
             TransferredAmount = transferredAmount;

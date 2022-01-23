@@ -31,7 +31,7 @@ namespace Bank.Domain.Entities
 
         private bool CanAddEvent(IEvent @event)
         {
-            return @event.AggregateVersion == Version && Id == @event.AggregateId;
+            return @event.AggregateVersion == Version && Id == @event.EventInfo.AggregateId;
         }
         
         public void Rehydrate(IEnumerable<IEvent> @events)
