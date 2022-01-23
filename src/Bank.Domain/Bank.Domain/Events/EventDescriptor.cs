@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bank.Repository
+namespace Bank.Domain.Events
 {
     public record EventDescriptor
     {
@@ -11,6 +11,7 @@ namespace Bank.Repository
         public string EventType { get; set; }
         public Guid CorrelationId { get; set; }
         public Guid SagaProcessKey { get; set; }
+        public int AggregateVersion { get; set; }
 
         public EventDescriptor(Guid aggregateId, Guid eventId, DateTime eventCommittedTimestamp, string eventPayload,
             string eventType, Guid correlationId, Guid sagaProcessKey)

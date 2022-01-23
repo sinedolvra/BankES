@@ -1,11 +1,11 @@
 ﻿using System;
-using Bank.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace Bank.Domain.Infrastructure
 {
     public interface IAggregateRepository<T>
     {
-        public void Save(T aggregateRoot);
-        public void Load(Guid aggregateId, T type);
+        Task Save(T aggregateRoot);
+        Task Load(Guid aggregateId, T type);
     }
 }

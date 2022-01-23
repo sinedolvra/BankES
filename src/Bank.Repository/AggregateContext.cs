@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bank.Domain.Events;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Repository
 {
