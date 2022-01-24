@@ -6,13 +6,13 @@ using Bank.Domain.Infrastructure;
 
 namespace Bank.Domain.Entities
 {
-    public class AggregateRoot<T> where T : class
+    public abstract class AggregateRoot<T> where T : class
     {
         public Guid Id { get; private set; }
-        protected int Version { get; set; } = -1;
+        public int Version { get; protected set; } = -1;
         private ICollection<IEvent> _uncommittedEvents = new List<IEvent>();
         public void Commit() => _uncommittedEvents.Clear();
-        protected void InitializeId() => Guid.NewGuid();
+        public void InitializeId() => Id = Guid.NewGuid();
         public IEnumerable<IEvent> UncommittedEvents() => _uncommittedEvents.ToList();
         protected IAggregateRepository<T> Repository { get; }
 
@@ -21,7 +21,7 @@ namespace Bank.Domain.Entities
             Repository = repository;
         }
         
-        protected void AddEvent(IEvent @event)
+        public void AddEvent(IEvent @event)
         {
             if (!CanAddEvent(@event))
                 throw new AggregateException("Aggregate state mismatch");
@@ -29,7 +29,7 @@ namespace Bank.Domain.Entities
             Version++;
         }
 
-        private bool CanAddEvent(IEvent @event)
+        public bool CanAddEvent(IEvent @event)
         {
             return @event.AggregateVersion == Version && Id == @event.EventInfo.AggregateId;
         }
