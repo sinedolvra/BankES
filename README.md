@@ -1,2 +1,2 @@
-# BankES
+# BankAccountES
  EventStore example
