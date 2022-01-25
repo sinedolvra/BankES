@@ -8,8 +8,7 @@ namespace Bank.Domain.Entities
 {
     public partial class BankAccount
     {
-        public async Task Open(string numberCode, string ispb, string branchNumber, string branchDigit, string accountNumber,
-            string accountDigit, AccountType accountType, AccountHolder accountHolder, Guid sagaProcessKey)
+        public async Task Open(string accountNumber, string accountDigit, AccountType accountType, AccountHolder accountHolder, Guid sagaProcessKey)
         {
             InitializeId();
             var @event = new AccountOpened(Id, sagaProcessKey, Version, accountNumber, accountDigit, accountType, accountHolder);
