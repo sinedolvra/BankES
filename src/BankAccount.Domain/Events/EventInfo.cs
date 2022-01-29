@@ -10,6 +10,11 @@ namespace Bank.Domain.Events
         public Guid CorrelationId { get; set; }
         public Guid SagaProcessKey { get; set; }
 
+        public EventInfo()
+        {
+            
+        }
+
         public EventInfo(Guid aggregateId, Guid correlationId, Guid sagaProcessKey)
         {
             AggregateId = aggregateId;

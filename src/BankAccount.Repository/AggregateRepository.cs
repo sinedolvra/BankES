@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Bank.Domain.Entities;
@@ -9,6 +10,7 @@ using Bank.Domain.Extensions;
 
 namespace Bank.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class AggregateRepository<T> : IAggregateRepository<T> where T : AggregateRoot<T>, new()
     {
         private AggregateContext Context { get; }
@@ -18,6 +20,7 @@ namespace Bank.Repository
             Context = context;
         }
         
+        [ExcludeFromCodeCoverage]
         public async Task Save(T aggregateRoot)
         {
             var @events = aggregateRoot.UncommittedEvents();
@@ -27,6 +30,7 @@ namespace Bank.Repository
             aggregateRoot.Commit();
         }
 
+        [ExcludeFromCodeCoverage]
         public Task Load(Guid aggregateId, T type)
         {
             var @events =  Context.Events.AsNoTracking()

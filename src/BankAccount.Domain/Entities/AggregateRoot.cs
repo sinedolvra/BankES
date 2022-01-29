@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Bank.Domain.Events;
+using Bank.Domain.Extensions;
 using Bank.Domain.Infrastructure;
+using Bank.Domain.Utils;
 
 namespace Bank.Domain.Entities
 {
@@ -38,8 +41,19 @@ namespace Bank.Domain.Entities
         {
             foreach (var @event in @events)
             {
-                ((dynamic) this).Apply((dynamic) @event);
+                var methodsWithInternalEventHandler = GetInternalEventHandlers();
+                foreach (var methodInfo in methodsWithInternalEventHandler)
+                {
+                    @event.InvokeOnAggregate(this, methodInfo.Name);
+                }
             }
+        }
+
+        private IEnumerable<MethodInfo> GetInternalEventHandlers()
+        {
+            return GetType().GetRuntimeMethods().Where(x =>
+                    x.GetCustomAttributes(typeof(InternalEventHandlerAttribute), true)
+                        .Any());
         }
     }
 }

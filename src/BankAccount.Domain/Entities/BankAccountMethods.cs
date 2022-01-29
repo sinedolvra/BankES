@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Bank.Domain.Enumerations;
 using Bank.Domain.Events;
+using Bank.Domain.Utils;
 using Bank.Domain.ValueObjects;
 
 namespace Bank.Domain.Entities
@@ -61,6 +62,7 @@ namespace Bank.Domain.Entities
                 throw new InvalidOperationException("Not enough money available");
         }
 
+        [InternalEventHandler]
         public void Apply(AccountOpened @event)
         {
             AccountNumber = @event.AccountNumber;
@@ -71,6 +73,7 @@ namespace Bank.Domain.Entities
             Version = @event.AggregateVersion;
         }
         
+        [InternalEventHandler]
         public void Apply(AccountClosed @event)
         {
             CurrentBalance = @event.Balance;
@@ -78,15 +81,24 @@ namespace Bank.Domain.Entities
             Version = @event.AggregateVersion;
         }
 
+        [InternalEventHandler]
         public void Apply(MoneyTransferred @event)
         {
             CurrentBalance -= @event.TransferredAmount;
             Version = @event.AggregateVersion;
         }
 
+        [InternalEventHandler]
         public void Apply(Withdrawal @event)
         {
             CurrentBalance -= @event.Amount;
+            Version = @event.AggregateVersion;
+        }
+
+        [InternalEventHandler]
+        public void Apply(DepositedAmount @event)
+        {
+            CurrentBalance += @event.Amount;
             Version = @event.AggregateVersion;
         }
         

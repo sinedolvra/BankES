@@ -1,8 +1,10 @@
-﻿using Bank.Domain.Events;
+﻿using System.Diagnostics.CodeAnalysis;
+using Bank.Domain.Events;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class AggregateContext : DbContext
     {
         public AggregateContext(DbContextOptions<AggregateContext> options)
@@ -10,6 +12,7 @@ namespace Bank.Repository
         {
         }
         
+        [ExcludeFromCodeCoverage]
         public DbSet<EventDescriptor> Events { get; set; }
     }
 }

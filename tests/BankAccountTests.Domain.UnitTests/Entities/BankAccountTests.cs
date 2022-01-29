@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
+using Bank.Domain;
 using Bank.Domain.Infrastructure;
 using Bank.Domain.Entities;
 using Bank.Domain.Enumerations;
@@ -211,6 +213,31 @@ namespace BankAccountTests.Domain.UnitTests.Entities
             
             _bankAccount.Version.Should().Be(@event.AggregateVersion);
             _bankAccount.CurrentBalance.Should().BeLessThan(oldCurrentBalance);
+        }
+
+        [Fact]
+        public void Rehydrate_GivenAValidEvents_ShouldApplyIts()
+        {
+            var events = new List<IEvent>()
+            {
+                _fixture.Create<AccountOpened>(),
+                _fixture.Create<AccountClosed>(),
+                _fixture.Create<DepositedAmount>(),
+                _fixture.Create<MoneyTransferred>(),
+                _fixture.Create<Withdrawal>(),
+            };
+            _bankAccount.Rehydrate(events);
+        }
+
+        [Fact]
+        public void Rehydrate_GivenAEventWithoutEquivalentEventHandler_ShouldThrowException()
+        {
+            var events = new List<IEvent>()
+            {
+                _fixture.Create<Event>()
+            };
+            Action result = () => _bankAccount.Rehydrate(events);
+            result.Should().Throw<AggregateEventOnApplyMethodMissingException>();
         }
         
         private IEvent GetValidEvent()
